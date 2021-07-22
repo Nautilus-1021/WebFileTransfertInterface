@@ -1,6 +1,5 @@
 import os
-from flask import Flask, render_template, request, flash, redirect
-from flask.helpers import url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 
 def create_app():
@@ -27,10 +26,14 @@ def create_app():
             if file:
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                return redirect(url_for('download_file', upload=filename))
+                return redirect(url_for('download_file', name=filename))
         else:
             return render_template('upload.html')
         
         return
+
+    @app.route('/uploads/<name>')
+    def download_file(name):
+        return send_from_directory(app.config['UPLOAD_FOLDER'], name)
 
     return app
