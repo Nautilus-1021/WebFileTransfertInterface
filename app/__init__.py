@@ -40,5 +40,18 @@ def create_app():
     def list_files():
         files = os.listdir(app.config['UPLOAD_FOLDER'])
         return render_template('list_files.html', files=files)
+    
+    @app.route('/delete/')
+    def delete():
+        files = os.listdir(app.config['UPLOAD_FOLDER'])
+        return render_template('delete_file.html', files=files)
+
+    @app.route('/delete/<name>')
+    def delete_file(name):
+        try:
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], name))
+        except FileNotFoundError:
+            flash('Fichier non trouvé')
+        return redirect(url_for('delete'))
 
     return app

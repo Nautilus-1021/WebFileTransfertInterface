@@ -2,4 +2,28 @@
 
 {% block title %}Accueil{% endblock %}
 
-{% block content %}<h1>Voici le futur: RIEN.</h1>{% endblock %}
+{% block content %}<h1 class="my-3">Bienvenue sur WFTI !</h1>
+<div class="container" id="featured-3">
+    <h2 class="border-bottom pb-2">Fonctionnalités</h2>
+    <div class="row py-5 row-cols-1 g-4 row-cols-lg-3">
+        <div class="feature col">
+            <div class="feature-icon bg-primary bg-gradient" style="color: white;"><i class="fas fa-file-upload bi"></i></div>
+            <h2>Charger un fichier</h2>
+            <p>BLABLUBLI</p>
+            <a class="icon-link" href="/upload/">Charger un fichier <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div class="feature col">
+            <div class="feature-icon bg-primary bg-gradient" style="color: white;"><i class="fas fa-file-download bi"></i></div>
+            <h2>Telecharger un fichier</h2>
+            <p>BLABLUBLI</p>
+            <a class="icon-link" href="/list/">Telecharger un fichier <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div class="feature col">
+            <div class="feature-icon bg-primary bg-gradient" style="color: white;"><i class="fas fa-list bi"></i></div>
+            <h2>Supprimer un fichier</h2>
+            <p>BLABLUBLI</p>
+            <a class="icon-link" href="/delete/">Voir la liste <i class="fas fa-chevron-right"></i></a>
+        </div>
+    </div>
+</div>
+{% endblock %}

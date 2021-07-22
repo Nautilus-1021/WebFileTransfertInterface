@@ -4,6 +4,6 @@
 
 {% block content %}<div class="list-group m-2">
 {% for element in files %}
-<a href="/uploads/{{ element }}" class="list-group-item list-group-item-action" download>{{ element }}</a>
+<a href="/delete/{{ element }}" class="list-group-item list-group-item-action">{{ element }}</a>
 {% endfor %}
 </div>{% endblock %}
