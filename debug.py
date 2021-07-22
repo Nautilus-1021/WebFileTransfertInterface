@@ -1,6 +1,3 @@
-from logging import debug
-
-from flask.json.tag import TagMarkup
 import app
 
-app.create_app().run(debug=True)
+app.create_app().run(input("Adresse: "), '5000', debug=True)

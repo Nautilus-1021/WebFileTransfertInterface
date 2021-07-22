@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for, sen
 from werkzeug.utils import secure_filename
 
 def create_app():
-    UPLOAD_FOLDER = 'C:\\Users\\victo\\Documents\\WebFileTransfertInterface\\app\\stockage\\'
+    UPLOAD_FOLDER = os.getcwd() + '\\app\\stockage\\'
 
     app = Flask(__name__)
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -21,12 +21,12 @@ def create_app():
                 return redirect(request.url)
             file = request.files['file']
             if file.filename == '':
-                flash('No selected file')
+                flash('Pas de fichier selectionné')
                 return redirect(request.url)
             if file:
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                return redirect(url_for('download_file', name=filename))
+                return redirect(url_for('homepage'))
         else:
             return render_template('upload.html')
         
@@ -35,5 +35,10 @@ def create_app():
     @app.route('/uploads/<name>')
     def download_file(name):
         return send_from_directory(app.config['UPLOAD_FOLDER'], name)
+
+    @app.route('/list/')
+    def list_files():
+        files = os.listdir(app.config['UPLOAD_FOLDER'])
+        return render_template('list_files.html', files=files)
 
     return app
