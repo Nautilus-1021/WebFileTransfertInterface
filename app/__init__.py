@@ -4,7 +4,7 @@ from flask.helpers import url_for
 from werkzeug.utils import secure_filename
 
 def create_app():
-    UPLOAD_FOLDER = os.getcwd() + '\\stockage\\'
+    UPLOAD_FOLDER = 'C:\\Users\\victo\\Documents\\WebFileTransfertInterface\\app\\stockage\\'
 
     app = Flask(__name__)
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -27,8 +27,10 @@ def create_app():
             if file:
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                return redirect(url_for('download_file', name=filename))
+                return redirect(url_for('download_file', upload=filename))
         else:
             return render_template('upload.html')
+        
+        return
 
     return app
