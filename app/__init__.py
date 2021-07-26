@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, jsonify, abort
 from werkzeug.utils import secure_filename
 
 def create_app():
@@ -58,5 +58,21 @@ def create_app():
     def cli_list():
         files = os.listdir(app.config['UPLOAD_FOLDER'])
         return jsonify(files)
+
+    @app.route('/cli/delete/<name>')
+    def cli_delete(name):
+        try:
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], name))
+        except FileNotFoundError:
+            abort(404)
+        return redirect(url_for('cli_list'))
+
+    @app.route('/404/')
+    def QCQ():
+        abort(404)
+
+    @app.errorhandler(404)
+    def page_not_found(error):
+        return "Page non trouvé | " + str(error), 404
 
     return app
