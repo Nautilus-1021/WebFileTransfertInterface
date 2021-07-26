@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, jsonify
 from werkzeug.utils import secure_filename
 
 def create_app():
@@ -53,5 +53,10 @@ def create_app():
         except FileNotFoundError:
             flash('Fichier non trouvé')
         return redirect(url_for('delete'))
+
+    @app.route('/cli/list')
+    def cli_list():
+        files = os.listdir(app.config['UPLOAD_FOLDER'])
+        return jsonify(files)
 
     return app
