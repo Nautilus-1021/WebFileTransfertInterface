@@ -29,8 +29,6 @@ def create_app():
                 return redirect(url_for('homepage'))
         else:
             return render_template('upload.html')
-        
-        return
 
     @app.route('/uploads/<name>')
     def download_file(name):
