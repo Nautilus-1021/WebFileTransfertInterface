@@ -128,4 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-/app/stockage/*
+# App Configuration
+# Exclude the folder of data stockage
+/wfti/stockage/*
+
+# Also exclude the database
+db.sqlite
