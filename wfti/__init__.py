@@ -34,6 +34,7 @@ def create_app():
         return render_template('homepage.html')
 
     @app.route('/upload/', methods=['GET', 'POST'])
+    @login_required
     def upload():
         if request.method == 'POST':
             if 'file' not in request.files:
@@ -46,44 +47,57 @@ def create_app():
             if file:
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                user = User.query.get(current_user.id)
+                if user.files:
+                    user.files = str(user.files) + filename + "|"
+                else:
+                    user.files = filename + "|"
+                db.session.commit()
                 return redirect(url_for('homepage'))
         else:
             return render_template('upload.html')
 
     @app.route('/uploads/<name>')
+    @login_required
     def download_file(name):
+        if name not in current_user.files:
+            abort(404)
         return send_from_directory(app.config['UPLOAD_FOLDER'], name)
 
     @app.route('/list/')
+    @login_required
     def list_files():
-        files = os.listdir(app.config['UPLOAD_FOLDER'])
+        if current_user.files:
+            files = current_user.files.split("|")
+            files.pop()
+        else:
+            files = list()
         return render_template('list_files.html', files=files)
     
     @app.route('/delete/')
+    @login_required
     def delete():
-        files = os.listdir(app.config['UPLOAD_FOLDER'])
+        if current_user.files:
+            files = current_user.files.split("|")
+            files.pop()
+        else:
+            files = list()
         return render_template('delete_file.html', files=files)
 
     @app.route('/delete/<name>')
+    @login_required
     def delete_file(name):
+        if name not in current_user.files:
+            abort(404)
+        else:
+            user = User.query.get(current_user.id)
+            user.files = user.files.replace(name + "|", "")
+            db.session.commit()
         try:
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], name))
         except FileNotFoundError:
             flash('Fichier non trouvé')
         return redirect(url_for('delete'))
-
-    @app.route('/cli/list')
-    def cli_list():
-        files = os.listdir(app.config['UPLOAD_FOLDER'])
-        return jsonify(files)
-
-    @app.route('/cli/delete/<name>')
-    def cli_delete(name):
-        try:
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], name))
-        except FileNotFoundError:
-            abort(404)
-        return redirect(url_for('cli_list'))
 
     @app.route('/404/')
     def QCQ():

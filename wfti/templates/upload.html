@@ -10,5 +10,7 @@
     </div>
     <button type="submit" class="btn btn-primary">Enregistrer</button>
 </form>{% if get_flashed_messages() %}
-<span>{{ get_flashed_messages() }}</span>
+<span>{% with messages =  get_flashed_messages() %}
+    {{ message }}
+    {% endwith %}</span>
 {% endif %}{% endblock %}
