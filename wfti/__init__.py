@@ -107,6 +107,10 @@ def create_app():
     def page_not_found(error):
         return "Page non trouvé | " + str(error), 404
 
+    @app.errorhandler(500)
+    def error500(error):
+        return "C'est la merde | " + str(error), 500
+
     @app.route('/profile')
     @login_required
     def profile():
