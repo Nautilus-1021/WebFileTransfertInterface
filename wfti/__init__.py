@@ -1,4 +1,4 @@
-import os
+import pathlib
 from flask import Flask, render_template, request, flash, redirect, url_for, send_from_directory, jsonify, abort
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
@@ -7,7 +7,7 @@ from flask_login import LoginManager, login_required, current_user
 db = SQLAlchemy()
 
 def create_app():
-    UPLOAD_FOLDER = os.getcwd() + '\\wfti\\stockage\\'
+    UPLOAD_FOLDER = pathlib.Path.cwd() / "wfti" / "stockage"
 
     app = Flask(__name__)
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -46,7 +46,7 @@ def create_app():
                 return redirect(request.url)
             if file:
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file.save(app.config['UPLOAD_FOLDER'] / filename)
                 user = User.query.get(current_user.id)
                 if user.files:
                     user.files = str(user.files) + filename + "|"
@@ -94,7 +94,7 @@ def create_app():
             user.files = user.files.replace(name + "|", "")
             db.session.commit()
         try:
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], name))
+            (app.config['UPLOAD_FOLDER'] / name).unlink()
         except FileNotFoundError:
             flash('Fichier non trouvé')
         return redirect(url_for('delete'))
